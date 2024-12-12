@@ -19,7 +19,7 @@ class ProjectAPI:
 
     def get_movies_by_name(self, filtres=None, auth_token=None):
         """
-            Метод реализует Универсальный поиск с фильтрами.
+            Метод реализует Поиск фильмов по названию.
         """
         response = requests.get(self.url + "v1.4/movie/search",
                                 params=filtres, headers=auth_token)
