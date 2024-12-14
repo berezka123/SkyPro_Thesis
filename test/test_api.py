@@ -17,6 +17,8 @@ def test_get_movies_by_rating(filtres={"rating.kp": "9.1-10"},
     """
     response = kinopoisk.get_movies(filtres, auth_token)
     assert response.status_code == 200
+    movie_list = response.json()
+    assert movie_list["total"] != 0
 
 
 def test_get_movies_by_ticket(filtres={"ticketsOnSale": "true",
@@ -29,6 +31,8 @@ def test_get_movies_by_ticket(filtres={"ticketsOnSale": "true",
     """
     response = kinopoisk.get_movies(filtres, auth_token)
     assert response.status_code == 200
+    movie_list = response.json()
+    assert movie_list["total"] != 0
 
 
 def test_get_movies_by_genre(filtres={"genres.name": "драма",
@@ -39,6 +43,8 @@ def test_get_movies_by_genre(filtres={"genres.name": "драма",
     """
     response = kinopoisk.get_movies(filtres, auth_token)
     assert response.status_code == 200
+    movie_list = response.json()
+    assert movie_list["total"] != 0
 
 
 def test_get_movies_by_name(filtres={"query": "Три кота"},
@@ -48,6 +54,8 @@ def test_get_movies_by_name(filtres={"query": "Три кота"},
     """
     response = kinopoisk.get_movies_by_name(filtres, auth_token)
     assert response.status_code == 200
+    movie_list = response.json()
+    assert movie_list["total"] != 0
 
 
 def test_get_movies_by_name_with_opechatka(filtres={"query": "татаник"},
@@ -57,6 +65,8 @@ def test_get_movies_by_name_with_opechatka(filtres={"query": "татаник"},
     """
     response = kinopoisk.get_movies_by_name(filtres, auth_token)
     assert response.status_code == 200
+    movie_list = response.json()
+    assert movie_list["total"] != 0
 
 
 def test_get_movies_by_empty_name(filtres={"query": ""},
@@ -66,6 +76,8 @@ def test_get_movies_by_empty_name(filtres={"query": ""},
     """
     response = kinopoisk.get_movies_by_name(filtres, auth_token)
     assert response.status_code == 200
+    movie_list = response.json()
+    assert movie_list["total"] == 0
 
 
 def test_get_movies_by_incorrect_name(filtres={"query": "Keynbr"},
@@ -75,3 +87,5 @@ def test_get_movies_by_incorrect_name(filtres={"query": "Keynbr"},
     """
     response = kinopoisk.get_movies_by_name(filtres, auth_token)
     assert response.status_code == 200
+    movie_list = response.json()
+    assert movie_list["total"] == 0

@@ -2,6 +2,9 @@ from selenium.webdriver.common.by import By
 
 
 class Authorization:
+    """
+        Класс содержит методы для авторизации на сайте Кинопоиска.
+    """
 
     def __init__(self, browser):
         self._driver = browser
@@ -9,12 +12,33 @@ class Authorization:
         self._driver.maximize_window()
     
     def find_enter(self):
-        self._driver.find_element(By.CSS_SELECTOR, ".styles_loginButton__LWZQp").click()
-
-    def authorization(self, username, password):
-        self._driver.find_element(By.CSS_SELECTOR, 'input[id="user-name"]').\
-            send_keys("standard_user")
-        self._driver.find_element(By.CSS_SELECTOR, 'input[id="password"]').\
-            send_keys("secret_sauce")
+        """
+            Метод реализует поиск кнопки Войти.
+        """
+        try:  # Закрыть коммуникацию.
+            self._driver.find_element(By.CSS_SELECTOR,
+                                      ".styles_root__EjoL7").click()
+        except:
+            pass
         self._driver.find_element(By.CSS_SELECTOR,
-                                  'input[id="login-button"]').click()
+                                  ".styles_loginButton__LWZQp").click()
+
+    def authorization(self, timeout, username, password):
+        """
+            Метод реализует заполнение полей Логин или email,
+        нажатие кнопки Войти, ввод пароля и нажатие кнопки Продолжить.
+        """
+        self._driver.implicitly_wait(timeout)
+        self._driver.find_element(By.XPATH, '//*[@id="passp-field-login"]').\
+            send_keys(username)
+        self._driver.find_element(By.XPATH, '//*[@id="passp:sign-in"]').\
+            click()
+        self._driver.find_element(By.XPATH, '//*[@id="passp-field-passwd"]').\
+            send_keys(password)
+        self._driver.find_element(By.XPATH, '//*[@id="passp:sign-in"]').\
+            click()
+        try:
+            self._driver.find_element(By.CSS_SELECTOR,
+                                      ".Button2_view_contrast-pseudo").click()
+        except:
+            pass
