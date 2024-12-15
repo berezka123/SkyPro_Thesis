@@ -1,3 +1,4 @@
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 
 
@@ -11,18 +12,22 @@ class Search:
         self._driver.get("https://www.kinopoisk.ru/")
         self._driver.maximize_window()
 
-    def search_query(self, query):
+    def search_query(self, query: str):
         """
             Метод реализует ввод поискового запроса.
         """
         try:  # Закрыть коммуникацию.
             self._driver.find_element(By.CSS_SELECTOR,
                                       ".styles_root__EjoL7").click()
-        except:
+        except NoSuchElementException:
             pass
+
         self._driver.find_element(By.TAG_NAME,
                                   "input").send_keys(query)
         self._driver.find_element(By.CSS_SELECTOR,
                                   ".search-form-submit-button__icon").click()
-        result = self._driver.find_elements(By.CSS_SELECTOR, ".styles-title___itJ6")
-        return result
+        result_text = self._driver.\
+            find_element(By.CSS_SELECTOR, ".search_results_topText").text
+        result_list = result_text.split(": ")
+
+        return int(result_list[2])
