@@ -8,21 +8,13 @@ from pages.ui_authorization import Authorization
 from pages.ui_search import Search
 
 
-def resolving_captcha(driver):
+def resolving_captcha():
     """
         Функция решения капчи.
     Принцип предельно прост: капчу решает человек.
         Не благодарите :)
     """
-#    sleep(60)
-    try:
-        WebDriverWait(driver, 60).until(
-            expected_conditions.presence_of_element_located(
-                By.CSS_SELECTOR, ".styles_root__EjoL7"
-            )
-        )
-    except:
-        pass
+    sleep(60)
 
 
 def test_kinopoisk_auth():
@@ -30,10 +22,8 @@ def test_kinopoisk_auth():
     password = "P@ssW0rd"
     browser = webdriver.Chrome()
 
-
-
     authorization_page = Authorization(browser)
-    resolving_captcha(browser)
+    resolving_captcha()
 
     authorization_page.find_enter()
     authorization_page.authorization(3, username, password)
@@ -41,7 +31,7 @@ def test_kinopoisk_auth():
     browser.quit()
 
 
-@pytest.mark.parametrize("login", "alert",
+@pytest.mark.parametrize("login, alert",
                          [("", "Логин не указан"),
                           (" ", "Логин не указан"),
                           ("example@@yandex.ru", "Такой логин не подойдет"),
@@ -67,7 +57,7 @@ def test_kinopoisk_correct_search(corect_query):
     browser = webdriver.Chrome()
 
     search_page = Search(browser)
-    resolving_captcha(browser)
+    resolving_captcha()
 
     assert search_page.search_query(corect_query) != 0
     sleep(5)
