@@ -1,4 +1,5 @@
 import requests
+import allure
 
 
 class ProjectAPI:
@@ -9,7 +10,8 @@ class ProjectAPI:
     def __init__(self, url):
         self.url = url
 
-    def get_movies(self, filtres=None, auth_token=None):
+    @allure.step("Универсальный поиск с фильтрами")
+    def get_movies(self, filtres: dict = {}, auth_token: str = ""):
         """
             Метод реализует Универсальный поиск с фильтрами.
         """
@@ -17,7 +19,8 @@ class ProjectAPI:
                                 headers=auth_token)
         return response
 
-    def get_movies_by_name(self, filtres=None, auth_token=None):
+    @allure.step("Поиск фильмов по названию")
+    def get_movies_by_name(self, filtres: dict = {}, auth_token: str = ""):
         """
             Метод реализует Поиск фильмов по названию.
         """

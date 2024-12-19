@@ -21,5 +21,9 @@
 `pip install -r requirements.txt`
 
 ### Запуск
-запуск осуществляется командой:
+Запуск только UI-тестов:
+`pytest .\test\test_ui.py`
+Запуск только API-тестов:
 `pytest .\test\test_api.py`
+Запуск всех тестов:
+`pytest .\test\`

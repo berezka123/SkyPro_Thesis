@@ -1,3 +1,4 @@
+import allure
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 
@@ -12,6 +13,7 @@ class Search:
         self._driver.get("https://www.kinopoisk.ru/")
         self._driver.maximize_window()
 
+    @allure.step("")
     def search_query(self, query: str):
         """
             Метод реализует ввод поискового запроса.
