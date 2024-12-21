@@ -1,6 +1,6 @@
+import test
 import allure
 from pages.project_api import ProjectAPI
-import test
 
 
 api_key = {

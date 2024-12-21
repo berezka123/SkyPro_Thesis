@@ -1,39 +1,17 @@
+import test
+import allure
 import pytest
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.support.ui import WebDriverWait
+from pages.ui_captcha import CaptchaResolve
 from pages.ui_authorization import Authorization
 from pages.ui_search import Search
 
 
-def resolving_captcha(driver, timeout=60):
-    """
-        Функция решения капчи.
-    В случае появления ----, автоматически отмечается чекбокс "Я не робот".
-    В случае появления капчи, человеку нужно самостоятельно её решить за
-    {timeout} (по умолчанию - 60) секунд.
-    """
-    try:  # Поставить галку "Я не робот".
-        driver.find_element(By.CSS_SELECTOR, ".CheckboxCaptcha-Button").click()
-    except NoSuchElementException:
-        pass
-
-    try:  # Закрыть коммуникацию.
-        WebDriverWait(driver, timeout).until(
-            expected_conditions.presence_of_element_located(
-                (By.CSS_SELECTOR, ".styles_root__EjoL7")
-            )
-        )
-        driver.find_element(By.CSS_SELECTOR, ".styles_root__EjoL7").click()
-    except TimeoutException:
-        pass
-    except NoSuchElementException:
-        pass
-
-
+@allure.title("Автотест на авторизацию по Логину или e-mail")
+@allure.description("Негативный тест-кейс на ввод некорректного Логина\
+                     или e-mail")
+@allure.feature("Авторизация")
+@allure.severity(allure.severity_level.BLOCKER)
 @pytest.mark.parametrize("login, alert",
                          [("", "Логин не указан"),
                           (" ", "Логин не указан"),
@@ -42,10 +20,11 @@ def resolving_captcha(driver, timeout=60):
                           ("o'Brian@yandex.ru", "Такой логин не подойдет")
                           ])
 def test_incorrect_login(login, alert):
-    browser = webdriver.Chrome()
+    browser = webdriver.Firefox()
 
     authorization_page = Authorization(browser)
-    resolving_captcha(browser)
+    captcha_resolver = CaptchaResolve(browser)
+    captcha_resolver.resolving_captcha()
     authorization_page.find_enter()
     assert authorization_page.\
         incorrect_login(3, login) == alert
@@ -53,18 +32,22 @@ def test_incorrect_login(login, alert):
     browser.quit()
 
 
+@allure.title("Автотест на авторизацию по Логину или e-mail")
+@allure.description("Негативный тест-кейс на ввод некорректного Пароля")
+@allure.feature("Авторизация")
+@allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.parametrize("login, password, alert",
-                         [("example@yandex.ru", "", "Пароль не указан"),
-                          ("example@yandex.ru", " ", "Пароль не указан"),
-                          ("example@yandex.ru", "asd123", "Неверный пароль"),
-                          ("example@yandex.ru", "\n\t\r", "Неверный пароль"),
-                          ("example@yandex.ru", "\033[2J", "Неверный пароль")
+                         [(test.correct_login, "", "Пароль не указан"),
+                          (test.correct_login, " ", "Пароль не указан"),
+                          (test.correct_login, "asd123", "Неверный пароль"),
+                          (test.correct_login, "\n\r\t", "Пароль не указан")
                           ])
 def test_incorrect_password(login, password, alert):
-    browser = webdriver.Chrome()
+    browser = webdriver.Firefox()
 
     authorization_page = Authorization(browser)
-    resolving_captcha(browser)
+    captcha_resolver = CaptchaResolve(browser)
+    captcha_resolver.resolving_captcha()
     authorization_page.find_enter()
     assert authorization_page.\
         incorrect_password(3, login, password) == alert
@@ -72,15 +55,20 @@ def test_incorrect_password(login, password, alert):
     browser.quit()
 
 
+@allure.title("Автотест на авторизацию по Телефону")
+@allure.description("Негативный тест-кейс на ввод некорректного Телефона")
+@allure.feature("Авторизация")
+@allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.parametrize("phone, alert",
                          [("", "Недопустимый формат номера"),
                           ("98765432101234", "Недопустимый формат номера")
                           ])
 def test_incorrect_phone(phone, alert):
-    browser = webdriver.Chrome()
+    browser = webdriver.Firefox()
 
     authorization_page = Authorization(browser)
-    resolving_captcha(browser)
+    captcha_resolver = CaptchaResolve(browser)
+    captcha_resolver.resolving_captcha()
     authorization_page.find_enter()
     assert authorization_page.\
         incorrect_phone(3, phone) == alert
@@ -88,30 +76,37 @@ def test_incorrect_phone(phone, alert):
     browser.quit()
 
 
+@allure.title("Автотест на Поиск")
+@allure.description("Позитивный тест-кейс на поиск по корректному запросу")
+@allure.feature("Поиск")
+@allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.parametrize("corect_query", ["Гарви",
-                                          "Харви",
+                                          "Леонардо ди Каприо",
                                           "Fargo"])
 def test_kinopoisk_correct_search(corect_query):
-#    browser = webdriver.Chrome()
     browser = webdriver.Firefox()
 
     search_page = Search(browser)
-    resolving_captcha(browser)
-
+    captcha_resolver = CaptchaResolve(browser)
+    captcha_resolver.resolving_captcha()
     assert search_page.search_query(corect_query) != 0
 
     browser.quit()
 
 
+@allure.title("Автотест на Поиск")
+@allure.description("Негативный тест-кейс на поиск по некорректному запросу")
+@allure.feature("Поиск")
+@allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.parametrize("incorect_query", ["   ",
                                             "!@#$",
                                             "asdfghjklhqweyurgtyuiop"])
 def test_kinopoisk_incorrect_search(incorect_query):
-    browser = webdriver.Chrome()
+    browser = webdriver.Firefox()
 
     search_page = Search(browser)
-    resolving_captcha(browser)
-
+    captcha_resolver = CaptchaResolve(browser)
+    captcha_resolver.resolving_captcha()
     assert search_page.search_query(incorect_query) == 0
 
     browser.quit()
