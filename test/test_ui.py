@@ -89,7 +89,8 @@ def test_kinopoisk_correct_search(corect_query):
     search_page = Search(browser)
     captcha_resolver = CaptchaResolve(browser)
     captcha_resolver.resolving_captcha()
-    assert search_page.search_query(corect_query) != 0
+    assert search_page.search_query(corect_query) != 0, \
+        "По условиям поиска ничего не найдено"
 
     browser.quit()
 
@@ -107,6 +108,7 @@ def test_kinopoisk_incorrect_search(incorect_query):
     search_page = Search(browser)
     captcha_resolver = CaptchaResolve(browser)
     captcha_resolver.resolving_captcha()
-    assert search_page.search_query(incorect_query) == 0
+    assert search_page.search_query(incorect_query) == 0, \
+        "Уточните критерии поиска"
 
     browser.quit()

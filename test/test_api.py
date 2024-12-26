@@ -20,9 +20,9 @@ def test_get_movies_by_rating(filtres={"rating.kp": "9.1-10"},
         POS Поиск по высокому рейтингу Кинопоиск.
     """
     response = kinopoisk.get_movies(filtres, auth_token)
-    assert response.status_code == 200
+    assert response.status_code == 200, "Что-то пошло не так"
     movie_list = response.json()
-    assert movie_list["total"] != 0
+    assert movie_list["total"] != 0, "По условиям поиска ничего не найдено"
 
 
 @allure.title("Автотест на Универсальный поиск")
@@ -39,9 +39,9 @@ def test_get_movies_by_ticket(filtres={"ticketsOnSale": "true",
     и типу фильма.
     """
     response = kinopoisk.get_movies(filtres, auth_token)
-    assert response.status_code == 200
+    assert response.status_code == 200, "Что-то пошло не так"
     movie_list = response.json()
-    assert movie_list["total"] != 0
+    assert movie_list["total"] != 0, "По условиям поиска ничего не найдено"
 
 
 @allure.title("Автотест на Универсальный поиск")
@@ -56,9 +56,9 @@ def test_get_movies_by_genre(filtres={"genres.name": "драма",
         POS Поиск по жанру и возрастному рейтингу
     """
     response = kinopoisk.get_movies(filtres, auth_token)
-    assert response.status_code == 200
+    assert response.status_code == 200, "Что-то пошло не так"
     movie_list = response.json()
-    assert movie_list["total"] != 0
+    assert movie_list["total"] != 0, "По условиям поиска ничего не найдено"
 
 
 @allure.title("Автотест на Поиск фильмов по названию")
@@ -71,9 +71,9 @@ def test_get_movies_by_name(filtres={"query": "Три кота"},
         POS Поиск по названию
     """
     response = kinopoisk.get_movies_by_name(filtres, auth_token)
-    assert response.status_code == 200
+    assert response.status_code == 200, "Что-то пошло не так"
     movie_list = response.json()
-    assert movie_list["total"] != 0
+    assert movie_list["total"] != 0, "По условиям поиска ничего не найдено"
 
 
 @allure.title("Автотест на Поиск фильмов по названию")
@@ -86,9 +86,9 @@ def test_get_movies_by_name_with_opechatka(filtres={"query": "татаник"},
         POS Поиск по названию с опечатками
     """
     response = kinopoisk.get_movies_by_name(filtres, auth_token)
-    assert response.status_code == 200
+    assert response.status_code == 200, "Что-то пошло не так"
     movie_list = response.json()
-    assert movie_list["total"] != 0
+    assert movie_list["total"] != 0, "По условиям поиска ничего не найдено"
 
 
 @allure.title("Автотест на Поиск фильмов по названию")
@@ -102,9 +102,9 @@ def test_get_movies_by_empty_name(filtres={"query": ""},
         NEG Поиск по пустому названию
     """
     response = kinopoisk.get_movies_by_name(filtres, auth_token)
-    assert response.status_code == 200
+    assert response.status_code == 200, "Что-то пошло не так"
     movie_list = response.json()
-    assert movie_list["total"] == 0
+    assert movie_list["total"] == 0, "Уточните критерии поиска"
 
 
 @allure.title("Автотест на Поиск фильмов по названию")
@@ -118,6 +118,6 @@ def test_get_movies_by_incorrect_name(filtres={"query": "Keynbr"},
         NEG Поиск по названию в неправильной раскладке
     """
     response = kinopoisk.get_movies_by_name(filtres, auth_token)
-    assert response.status_code == 200
+    assert response.status_code == 200, "Что-то пошло не так"
     movie_list = response.json()
-    assert movie_list["total"] == 0
+    assert movie_list["total"] == 0, "Уточните критерии поиска"
